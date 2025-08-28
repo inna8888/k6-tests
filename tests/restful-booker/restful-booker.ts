@@ -1,9 +1,10 @@
 import http from "k6/http";
+import { check } from "k6";
 import { Options } from "k6/http";
 
 export const options: Options = {
    vus: 2,
-   duration: "5s",
+   duration: "2s",
 }
 
 
@@ -51,6 +52,10 @@ export default function () {
    const bookingId: any = createBookingResponse.json()!["bookingid"];
    console.log("Create booking response: " + JSON.stringify(createBookingResponse.json()));
    console.log("Booking ID: " + bookingId);
+
+   check(createBookingResponse, {
+      "Status 200": (response) => response.status === 200,
+   });
    
    //update booking
    const updateBookingResponse = http.put(`https://restful-booker.herokuapp.com/booking/${bookingId}`, 
@@ -75,9 +80,13 @@ export default function () {
    )
    console.log("Updated booking response: " + JSON.stringify(updateBookingResponse.json()));
 
+   check(createBookingResponse, {
+      "Status 200": (response) => response.status === 200,
+   });
+
 //delete booking
    const deleteBookingResposnse = http.del(`https://restful-booker.herokuapp.com/booking/${bookingId}`,
-      JSON.stringify(
+     undefined,
          {
             headers: {
                "Content-Type": "application/json",
@@ -85,7 +94,11 @@ export default function () {
                "Cookie": `token=${token}`
             }
          }
-      ));
+      );
+
+      check(createBookingResponse, {
+      "Status 200": (response) => response.status === 200,
+      });
 
 }
 
