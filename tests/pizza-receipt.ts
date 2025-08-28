@@ -17,8 +17,18 @@ function totallyRandomNumber() {
 
 // Налаштування тесту: 2 віртуальних користувача, тривалість 5 секунд
 export const options: Options = {
-   vus: 1,
-   duration: "2s",
+
+   cloud: {
+    projectID: 4100611,
+    // Test runs with the same name groups test runs together
+    name: 'get pizza receipt',
+    distribution: {
+      'amazon:de:frankfurt': { loadZone: 'amazon:de:frankfurt', percent: 100 },
+    },
+  },
+
+   vus: 2,
+   duration: "5s",
    //iterations: 10,
 };
 
